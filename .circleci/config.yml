@@ -9,7 +9,7 @@ commands:
       - when:
           condition:
             matches:
-              pattern: "^renovate/devDependencies-.*"
+              pattern: "^renovate/.*devDependencies-.*"
               value: << pipeline.git.branch >>
           steps:
             - run:
@@ -21,7 +21,7 @@ commands:
       - when:
           condition:
             matches:
-              pattern: "^renovate/dependencies-.*"
+              pattern: "^renovate/.*dependencies-.*"
               value: << pipeline.git.branch >>
           steps:
             - run:
@@ -39,7 +39,9 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
-      - run: echo "CIRCLE_BRANCH: $CIRCLE_BRANCH"
+      - run:
+          name: echo branch name
+          command: echo "$CIRCLE_BRANCH"
       - skip-if-npm-dev-dependencies-update
       - skip-if-npm-dependencies-update
       - checkout
