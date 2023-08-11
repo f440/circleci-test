@@ -21,7 +21,7 @@ jobs:
               pattern: "^renovate/.*devDependencies.*"
               value: << pipeline.git.branch >>
           steps:
-            - run: echo match!
+            - run: circleci-agent step halt
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
