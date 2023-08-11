@@ -9,11 +9,23 @@ commands:
       - when:
           condition:
             matches:
-              pattern: "^renovate/.*devDependencies-.*"
+              pattern: "^renovate/devDependencies-.*"
               value: << pipeline.git.branch >>
           steps:
             - run:
                 name: "Job halted (irrelevant update: npm devDependencies)"
+                command: circleci-agent step halt
+  skip-if-dependencies-update:
+    description: "Job halted (irrelevant update: npm dependencies)"
+    steps:
+      - when:
+          condition:
+            matches:
+              pattern: "^renovate/dependencies-.*"
+              value: << pipeline.git.branch >>
+          steps:
+            - run:
+                name: "Job halted (irrelevant update: npm dependencies)"
                 command: circleci-agent step halt
 
 # Define a job to be invoked later in a workflow.
