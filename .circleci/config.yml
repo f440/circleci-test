@@ -2,6 +2,32 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+commands:
+  skip-if-dev-dependencies-update:
+    description: "Job halted (irrelevant update: npm devDependencies)"
+    steps:
+      - when:
+          condition:
+            matches:
+              pattern: "^renovate/devDependencies-.*"
+              value: << pipeline.git.branch >>
+          steps:
+            - run:
+                name: "Job halted (irrelevant update: npm devDependencies)"
+                command: circleci-agent step halt
+  skip-if-dependencies-update:
+    description: "Job halted (irrelevant update: npm dependencies)"
+    steps:
+      - when:
+          condition:
+            matches:
+              pattern: "^renovate/dependencies-.*"
+              value: << pipeline.git.branch >>
+          steps:
+            - run:
+                name: "Job halted (irrelevant update: npm dependencies)"
+                command: circleci-agent step halt
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/configuration-reference/#jobs
 jobs:
@@ -13,19 +39,12 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
+      - skip-if-dev-dependencies-update
       - checkout
-      - run: echo << pipeline.git.branch >>
-      - when:
-          condition:
-            not:
-              matches:
-                pattern: "^renovate/.*devDependencies.*"
-                value: << pipeline.git.branch >>
-          steps:
-            - run: echo not match!
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+      - run: echo << pipeline.git.branch >>
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
