@@ -19,7 +19,7 @@ jobs:
           condition:
             not:
               matches:
-                pattern: "^renovate/.*devDependencies.*"
+                pattern: "renovate/.*devDependencies"
                 value: << pipeline.git.branch >>
           steps:
             - run: echo not match!
