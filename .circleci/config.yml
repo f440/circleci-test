@@ -3,7 +3,7 @@
 version: 2.1
 
 commands:
-  skip-if-dev-dependencies-update:
+  skip-if-npm-dev-dependencies-update:
     description: "Job halted (irrelevant update: npm devDependencies)"
     steps:
       - when:
@@ -15,7 +15,7 @@ commands:
             - run:
                 name: "Job halted (irrelevant update: npm devDependencies)"
                 command: circleci-agent step halt
-  skip-if-dependencies-update:
+  skip-if-npm-dependencies-update:
     description: "Job halted (irrelevant update: npm dependencies)"
     steps:
       - when:
@@ -39,7 +39,8 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
-      - skip-if-dev-dependencies-update
+      - skip-if-npm-dev-dependencies-update
+      - skip-if-npm-dependencies-update
       - checkout
       - run:
           name: "Say hello"
