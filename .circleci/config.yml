@@ -21,7 +21,9 @@ jobs:
               pattern: "^renovate/.*devDependencies.*"
               value: << pipeline.git.branch >>
           steps:
-            - run: circleci-agent step halt
+            - run:
+                name: "Job halted (irrelevant update: npm devDependencies)"
+                command: circleci-agent step halt
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
