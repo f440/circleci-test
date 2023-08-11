@@ -41,7 +41,9 @@ jobs:
     steps:
       - run:
           name: echo branch name
-          command: echo "$CIRCLE_BRANCH"
+          command: |
+            echo "$CIRCLE_BRANCH"
+            echo "$CIRCLE_PR_USERNAME"
       - skip-if-npm-dev-dependencies-update
       - skip-if-npm-dependencies-update
       - checkout
