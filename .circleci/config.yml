@@ -25,7 +25,7 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello:
-        filters:
-          branches:
-            ignore:
-              - /renovate.*devDependencies/
+          filters:
+            branches:
+              ignore:
+                - /renovate.*devDependencies/
