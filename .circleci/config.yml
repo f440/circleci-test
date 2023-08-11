@@ -15,6 +15,14 @@ jobs:
     steps:
       - checkout
       - run: echo << pipeline.git.branch >>
+      - when:
+          condition:
+            not:
+              matches:
+                pattern: "^.*devDependencies.*$"
+                value: << pipeline.git.branch >>
+          steps:
+            - run: echo not match!
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
@@ -24,9 +32,4 @@ jobs:
 workflows:
   say-hello-workflow:
     jobs:
-      - say-hello:
-          filters:
-            branches:
-              ignore:
-                - /main/
-                - /dev/
+      - say-hello
