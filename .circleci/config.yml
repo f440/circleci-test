@@ -17,12 +17,11 @@ jobs:
       - run: echo << pipeline.git.branch >>
       - when:
           condition:
-            not:
-              matches:
-                pattern: "^renovate/.*devDependencies.*"
-                value: << pipeline.git.branch >>
+            matches:
+              pattern: "^renovate/.*devDependencies.*"
+              value: << pipeline.git.branch >>
           steps:
-            - run: echo not match!
+            - run: echo match!
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
