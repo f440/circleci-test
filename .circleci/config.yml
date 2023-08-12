@@ -2,6 +2,9 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+orbs:
+  path-filtering: circleci/path-filtering@1.0.0
+
 commands:
   skip-if-dev-dependencies-update:
     description: "Job halted (irrelevant update: npm devDependencies)"
@@ -52,3 +55,8 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
+      - path-filtering/filter:
+          base-revision: main
+          config-path: .circleci/config-x.yml
+          mapping: |
+            src/x/.* flag-x true
