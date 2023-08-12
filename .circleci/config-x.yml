@@ -15,5 +15,6 @@ jobs:
 
 workflows:
   in-config-x-workflow:
+    when: << pipeline.parameters.flag-x >>
     jobs:
       - in-config-x
