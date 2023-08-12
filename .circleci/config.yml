@@ -3,25 +3,25 @@
 version: 2.1
 
 commands:
-  skip-if-dev-dependencies-update:
+  skip-if-npm-dev-dependencies-update:
     description: "Job halted (irrelevant update: npm devDependencies)"
     steps:
       - when:
           condition:
             matches:
-              pattern: "^renovate/devDependencies-.*"
+              pattern: "^renovate/.*devDependencies-.*"
               value: << pipeline.git.branch >>
           steps:
             - run:
                 name: "Job halted (irrelevant update: npm devDependencies)"
                 command: circleci-agent step halt
-  skip-if-dependencies-update:
+  skip-if-npm-dependencies-update:
     description: "Job halted (irrelevant update: npm dependencies)"
     steps:
       - when:
           condition:
             matches:
-              pattern: "^renovate/dependencies-.*"
+              pattern: "^renovate/.*dependencies-.*"
               value: << pipeline.git.branch >>
           steps:
             - run:
@@ -39,7 +39,13 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
-      - skip-if-dev-dependencies-update
+      - run:
+          name: echo branch name
+          command: |
+            echo "$CIRCLE_BRANCH"
+            echo "$CIRCLE_PR_USERNAME"
+      - skip-if-npm-dev-dependencies-update
+      - skip-if-npm-dependencies-update
       - checkout
       - run:
           name: "Say hello"
