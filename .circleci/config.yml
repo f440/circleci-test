@@ -4,10 +4,33 @@ version: 2.1
 
 setup: true
 
-orbs:
-  path-filtering: circleci/path-filtering@1.0.0
-
 commands:
+  halt-if-not-changed:
+    parameters:
+      pattern:
+        type: string
+    steps:
+      - run:
+          name: "Check if files are changed"
+          command: |
+            echo "Fetching changed files..."
+            echo "Branch: << pipeline.git.branch >>"
+            git fetch origin << pipeline.git.branch >>
+
+            echo "Fetching base branch..."
+            base=$(git ls-remote --symref origin HEAD | tail -n 1 | cut -f 1)
+
+            git diff --name-only $base...origin/<< pipeline.git.branch >> | tee /tmp/changed.txt
+            if [ $? -ne 0 ]; then
+              echo "Failed to get changed files. Regular job will be executed."
+              exit 0
+            fi
+
+            cat /tmp/changed.txt | grep -q -E "<< parameters.pattern >>" | tee matched.txt
+
+            if [ -s matched.txt ]; then
+              echo "not matched. skip."
+              circleci-agent step halt
   skip-if-npm-dev-dependencies-update:
     description: "Job halted (irrelevant update: npm devDependencies)"
     steps:
@@ -44,18 +67,11 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
-      - run:
-          name: echo branch name
-          command: |
-            echo "$CIRCLE_BRANCH"
-            echo "$CIRCLE_PR_USERNAME"
-      - skip-if-npm-dev-dependencies-update
-      - skip-if-npm-dependencies-update
-      - checkout
+      - halt-if-not-changed:
+          pattern: "src/.*"
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
-      - run: echo << pipeline.git.branch >>
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
@@ -63,8 +79,8 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
-      - path-filtering/filter:
-          base-revision: main
-          config-path: .circleci/config-x.yml
-          mapping: |
-            src/x/.* flag-x true
+      # - path-filtering/filter:
+      #     base-revision: main
+      #     config-path: .circleci/config-x.yml
+      #     mapping: |
+      #       src/x/.* flag-x true
