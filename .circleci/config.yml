@@ -11,6 +11,9 @@ orbs:
         parameters:
           pattern:
             type: string
+          diff-filter:
+            type: string
+            default: "d" # without deleted files
         steps:
           - checkout
           - run:
@@ -30,7 +33,7 @@ orbs:
                 fi
 
                 echo "Changed files:"
-                git diff --name-only $BASE_SHA1...$CIRCLE_SHA1 | tee changed.txt
+                git diff --name-only --diff-filter=<< parameters.diff-filter >> $BASE_SHA1...$CIRCLE_SHA1 | tee changed.txt
                 echo
                 if [ $? -ne 0 ]; then
                   echo "Failed to get changed files. Regular job will be executed."
