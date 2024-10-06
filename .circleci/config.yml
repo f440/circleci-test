@@ -16,6 +16,7 @@ orbs:
           - run:
               name: "Check if files are changed"
               command: |
+                set -x
                 echo "Fetching base branch..."
                 BASE_BRANCH=$(git ls-remote --symref origin HEAD | grep -oP '(?<=refs/heads/)\S+')
                 BASE_SHA1=$(git ls-remote --symref origin HEAD | tail -n 1 | cut -f 1)
@@ -24,7 +25,7 @@ orbs:
 
                 # Since the difference of files is calculated based on the default branch,
                 # the difference cannot be obtained if the PR is created from the default branch.
-                if [ $CIRCLE_BRANCH = $CIRCLE_BRANCH ]; then
+                if [ $BASE_BRANCH = $CIRCLE_BRANCH ]; then
                   echo "Base branch is same as default branch. Regular job will be executed."
                   exit 0
                 fi
