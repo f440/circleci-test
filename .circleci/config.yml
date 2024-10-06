@@ -19,7 +19,6 @@ commands:
       - run:
           name: "Check if files are changed"
           command: |
-            set -x
             BASE_REVISION="<< pipeline.git.base_revision >>"
             if [ -z "$BASE_REVISION" ]; then
               # If base_revision is not specified, get the HEAD of origin
