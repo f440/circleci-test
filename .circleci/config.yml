@@ -16,6 +16,7 @@ orbs:
           - run:
               name: "Check if files are changed"
               command: |
+                set -x
                 echo "Fetching base branch..."
                 BASE_SHA1=$(git ls-remote --symref origin HEAD | tail -n 1 | cut -f 1)
 
