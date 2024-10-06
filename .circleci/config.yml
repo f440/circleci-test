@@ -31,6 +31,7 @@ orbs:
                 if [ -s matched.txt ]; then
                   echo "not matched. skip."
                   circleci-agent step halt
+                fi
 
 commands:
   skip-if-npm-dev-dependencies-update:
