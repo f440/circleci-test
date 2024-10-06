@@ -24,6 +24,7 @@ orbs:
                 BASE_SHA1=$(git ls-remote --symref origin HEAD | tail -n 1 | cut -f 1)
                 echo "Base SHA1: $BASE_SHA1"
                 echo "Base BRANCH: $BASE_BRANCH"
+                echo
 
                 # Since the difference of files is calculated based on the default branch,
                 # the difference cannot be obtained if the PR is created from the default branch.
