@@ -28,7 +28,7 @@ orbs:
                   exit 0
                 fi
 
-                cat changed.txt | grep -P -e "<< parameters.pattern >>" | tee matched.txt
+                cat changed.txt | grep -P -e "<< parameters.pattern >>" | tee matched.txt || true
 
                 if [ ! -s matched.txt ]; then
                   echo "not matched. skip."
