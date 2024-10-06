@@ -29,14 +29,17 @@ orbs:
                   exit 0
                 fi
 
-                echo "Fetching changed files..."
+                echo "Changed files:"
                 git diff --name-only $BASE_SHA1...$CIRCLE_SHA1 | tee changed.txt
+                echo
                 if [ $? -ne 0 ]; then
                   echo "Failed to get changed files. Regular job will be executed."
                   exit 0
                 fi
 
+                echo "Matched files:"
                 cat changed.txt | grep -P -e "<< parameters.pattern >>" | tee matched.txt || true
+                echo
                 if [ ! -s matched.txt ]; then
                   echo "not matched. skip."
                   circleci-agent step halt
