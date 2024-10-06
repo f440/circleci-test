@@ -19,16 +19,18 @@ orbs:
                 set -x
                 echo "Fetching base branch..."
                 BASE_SHA1=$(git ls-remote --symref origin HEAD | tail -n 1 | cut -f 1)
+                echo "Base branch: $BASE_SHA1"
 
-                git diff --name-only $BASE_SHA1...$CIRCLE_SHA1 | tee /tmp/changed.txt
+                echo "Fetching changed files..."
+                git diff --name-only $BASE_SHA1...$CIRCLE_SHA1 | tee changed.txt
                 if [ $? -ne 0 ]; then
                   echo "Failed to get changed files. Regular job will be executed."
                   exit 0
                 fi
 
-                cat /tmp/changed.txt | grep -P -e "<< parameters.pattern >>" | tee matched.txt
+                cat changed.txt | grep -P -e "<< parameters.pattern >>" | tee matched.txt
 
-                if [ -s matched.txt ]; then
+                if [ ! -s matched.txt ]; then
                   echo "not matched. skip."
                   circleci-agent step halt
                 fi
