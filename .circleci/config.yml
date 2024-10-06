@@ -15,7 +15,6 @@ commands:
         default: "d"
         description: "Filter files by status. See: https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---diff-filterACDMRT"
     steps:
-      - checkout
       - run:
           name: "Check if files are changed"
           command: |
@@ -79,6 +78,7 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
+      - checkout
       - halt-if-not-changed:
           pattern: "src/.*"
       - run:
