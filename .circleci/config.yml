@@ -11,9 +11,14 @@ orbs:
         parameters:
           pattern:
             type: string
+            description: "Pattern to match the changed files."
           diff-filter:
             type: string
-            default: "d" # without deleted files
+            default: "d"
+            description: "Filter files by status. See: https://git-scm.com/docs/git-diff#Documentation/git-diff.txt---diff-filterACDMRT"
+          base-branch:
+            type: string
+            description: "Halt the job if the specified files are not changed."
         steps:
           - checkout
           - run:
@@ -24,6 +29,7 @@ orbs:
                 BASE_SHA1=$(git ls-remote --symref origin HEAD | tail -n 1 | cut -f 1)
                 echo "Base SHA1: $BASE_SHA1"
                 echo "Base BRANCH: $BASE_BRANCH"
+                # echo "BASE BRANCH FROM PARAM: << parameters.base-branch >>"
                 echo
 
                 # Since the difference of files is calculated based on the default branch,
@@ -88,6 +94,7 @@ jobs:
     steps:
       - file-changes/halt-if-not-changed:
           pattern: "src/.*"
+          base-branch: << pipeline.git.base_revision >>
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
