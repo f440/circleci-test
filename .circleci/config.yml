@@ -27,6 +27,8 @@ commands:
             fi
             BUILD_REVISION="<< pipeline.git.revision >>"
 
+            git fetch origin $BASE_REVISION
+
             echo "Changed files:"
             git diff --name-only --diff-filter=<< parameters.diff-filter >> $BASE_REVISION...$BUILD_REVISION | tee changed.txt
             echo
