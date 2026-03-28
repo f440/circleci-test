@@ -9,31 +9,17 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
+      - changed-files/check:
+          base-branch: main
+          files: |
+            src/**
+            !src/fff.txt
+          debug: true
       - run:
-          name: Clear marker
+          name: Fail if the negated pattern did not exclude the file
           command: |
-            rm -f /tmp/changed-files-check-ran
-      - when:
-          condition:
-            not:
-              equal: [ codex/test-changed-files-continue, << pipeline.git.branch >> ]
-          steps:
-            - changed-files/check:
-                base-branch: main
-                files: |
-                  src/**
-                debug: true
-            - run:
-                name: Mark changed-files/check execution
-                command: touch /tmp/changed-files-check-ran
-      - run:
-          name: Assert changed-files/check was skipped
-          command: |
-            if [ -e /tmp/changed-files-check-ran ]; then
-              echo "changed-files/check unexpectedly ran"
-              exit 1
-            fi
-            echo "changed-files/check was skipped by branch condition"
+            echo "changed-files/check continued even though src/fff.txt was excluded"
+            exit 1
 
 workflows:
   verify:
