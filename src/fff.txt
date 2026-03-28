@@ -1,2 +1,3 @@
 Verification note for changed-files orb continue behavior.
 Rerun trigger after URL orb allow-list update.
+Rerun trigger after switching CircleCI auth mode to OAuth.
